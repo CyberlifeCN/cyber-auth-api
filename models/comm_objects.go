@@ -50,9 +50,14 @@ type LoginResp struct {
   Rs   	 	SessionTicket 	  `json:"rs"`
 }
 
-
 type RetrieveSessionTicketResp struct {
 	Code   	int 					    `json:"err_code"`
 	Msg    	string 						`json:"err_msg"`
   Rs   	 	SessionTicket 	  `json:"rs"`
+}
+
+type RefreshSessionTicketResp struct {
+	Code   	int 					    `json:"err_code"`
+	Msg    	string 						`json:"err_msg"`
+  Rs   	 	RefreshTicket 	  `json:"rs"`
 }

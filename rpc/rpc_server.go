@@ -104,17 +104,36 @@ func (t *Auth) RetrieveTicket(args *models.RetrieveTicketArgs, reply *models.Ses
 }
 
 
-func (t *Auth) RefreshTicket(args *models.RefreshTicketArgs, reply *models.SessionTicket) error {
+func (t *Auth) RefreshTicket(args *models.RefreshTicketArgs, reply *models.RefreshTicket) error {
   fmt.Println("Auth.RefreshTicket: %d", args)
 
-  ticket := models.FindRefreshToken(args.RefreshToken)
-  if ticket != nil {
-    *reply = *ticket
+  timestamp := models.GetTimestamp()
+  refresh_ticket := models.FindRefreshTicket(args.RefreshToken)
+  if refresh_ticket != nil {
+    if (refresh_ticket.ExpiresAt < timestamp) {
+      reply = nil
+      return nil
+    } else {
+      // create access_token for session_ticket
+      var session_ticket = &models.SessionTicket{}
+      session_ticket.AccountId = refresh_ticket.AccountId
+      session_ticket.ExpiresAt = timestamp + 7200000 // 2hours
+      session_ticket.RefreshToken = refresh_ticket.Id
+      session_ticket.TokenType = "Bearer"
+      session_ticket.Scope = "ticket"
+      session_ticket.Id = models.GetUuidString()
+      models.AddSessionTicket(*session_ticket)
+
+      refresh_ticket.AccessToken = session_ticket.Id
+      models.UpdateRefreshTicket(refresh_ticket.Id, refresh_ticket.AccessToken)
+
+      *reply = *refresh_ticket
+      return nil
+    }
+  } else {
+    reply = nil
     return nil
   }
-
-  reply = nil
-  return nil
 }
 
 

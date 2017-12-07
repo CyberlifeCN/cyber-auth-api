@@ -60,3 +60,49 @@ func (t *TicketController) Get() {
 		t.ServeJSON()
 	}
 }
+
+
+// @Title Refresh
+// @Description refresh session_ticket by refresh_token
+// @Param	refresh_token		path 	string	true		"The key for refresh_ticket"
+// @Success 200 {object} models.RetrieveSessionTicketResp
+// @Failure 403 :refresh_token is empty
+// @router /:refresh_token/refresh [get]
+func (t *TicketController) Refresh() {
+	uri := t.Ctx.Input.URI()
+  beego.Info(uri)
+
+	refresh_token := t.GetString(":refresh_token")
+  beego.Trace(refresh_token)
+
+	var args = &models.RefreshTicketArgs{
+    RefreshToken: refresh_token,
+  }
+  reply := &models.RefreshTicket{}
+  err = GlobalRpcClient.Call("Auth.RefreshTicket", args, &reply)
+  if err != nil {
+    log.Fatal("RefreshTicket error :", err)
+  }
+  fmt.Println("RefreshTicket:", args, reply)
+
+	if (reply != nil && reply.Id != "") {
+		beego.Trace(reply)
+
+		var rs = &models.RefreshSessionTicketResp{
+			Code: 200,
+			Msg: "Success",
+			Rs: *reply,
+		}
+
+		t.Data["json"] = *rs
+		t.ServeJSON()
+	} else {
+		var rs = &models.RefreshSessionTicketResp{
+			Code: 404,
+			Msg: "Not Found",
+		}
+
+		t.Data["json"] = *rs
+		t.ServeJSON()
+	}
+}
