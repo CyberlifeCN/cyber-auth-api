@@ -16,10 +16,11 @@ type LoginController struct {
 
 
 // @Title Login
-// @Description login by username & password though RPC
+// @Description login by uid (username,email,phone) & password though RPC
 // @Param	body		body 	models.LoginReq	true		"body for login content"
 // @Success 200 {object} models.SessionTicket
-// @Failure 403 :username or password is empty
+// @Failure 403 :uid or password is empty
+// @Failure 404 :uid & password not pair
 // @router / [post]
 func (this *LoginController) Post() {
 	uri := this.Ctx.Input.URI()

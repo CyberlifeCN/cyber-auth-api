@@ -42,11 +42,11 @@ type RefreshTicket struct {
 }
 
 
-type VerifyCodeReq struct {
+type RegisterVerifyCodeReq struct {
   Id      string          `json:"uid"`
 }
 
-type VerifyCodeResp struct {
+type RegisterVerifyCodeResp struct {
 	Code   	int 					    `json:"err_code"`
 	Msg    	string 						`json:"err_msg"`
   Rs   	 	string 	          `json:"rs"`

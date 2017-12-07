@@ -167,6 +167,15 @@ func (t *Auth) RefreshTicket(args *models.RefreshTicketArgs, reply *models.Refre
 func (t *Auth) CreateRegisterCode(args *models.CreateRegisterCodeArgs, reply *models.CreateRegisterCodeReply) error {
   fmt.Println("Auth.CreateRegisterCode: %d", args)
 
+  login := models.FindAuthLogin(args.Id)
+  fmt.Println("Auth.login: %d", login)
+  if (login != nil) {
+    var rs = &models.CreateCodeReply{}
+    rs.Status = 412
+    *reply = *rs
+    return nil
+  }
+
   timestamp := models.GetTimestamp()
   code := models.FindRegisterVerifyCode(args.Id)
   if (code != nil) {
@@ -178,15 +187,6 @@ func (t *Auth) CreateRegisterCode(args *models.CreateRegisterCodeArgs, reply *mo
       return nil
     }
   }
-
-  // login := models.FindAuthLogin(args.Id)
-  // fmt.Println("Auth.login: %d", login)
-  // if (login == nil || login.Id == "") {
-  //   var rs = &models.CreateCodeReply{}
-  //   rs.Status = 404
-  //   *reply = *rs
-  //   return nil
-  // }
 
   // create verify_code for register/lost-pwd/...
   var verify_code = &models.RegisterVerifyCode{}

@@ -3,6 +3,7 @@
 // @Description beego has a very cool tools to autogenerate documents for your API
 // @Contact dev@cyber-life.cn
 // @TermsOfServiceUrl http://cyber-life.cn/
+// @SourceCode https://github.com/CyberlifeCN/cyber-auth-api
 // @License Apache 2.0
 // @LicenseUrl http://www.apache.org/licenses/LICENSE-2.0.html
 package routers
@@ -28,16 +29,6 @@ func init() {
 		beego.NSNamespace("/ticket",
 			beego.NSInclude(
 				&controllers.TicketController{},
-			),
-		),
-		beego.NSNamespace("/register/code",
-			beego.NSInclude(
-				&controllers.RegisterCodeController{},
-			),
-		),
-		beego.NSNamespace("/lostpwd/code",
-			beego.NSInclude(
-				&controllers.LostpwdCodeController{},
 			),
 		),
 		beego.NSNamespace("/lostpwd",

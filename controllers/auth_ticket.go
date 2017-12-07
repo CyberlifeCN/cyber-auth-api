@@ -21,6 +21,7 @@ type TicketController struct {
 // @Param	access_token		path 	string	true		"The key for session_ticket"
 // @Success 200 {object} models.RetrieveSessionTicketResp
 // @Failure 403 :access_token is empty
+// @Failure 404 :access_token is not found in memcache
 // @router /:access_token [get]
 func (t *TicketController) Get() {
 	uri := t.Ctx.Input.URI()
@@ -65,8 +66,9 @@ func (t *TicketController) Get() {
 // @Title Refresh
 // @Description refresh session_ticket by refresh_token
 // @Param	refresh_token		path 	string	true		"The key for refresh_ticket"
-// @Success 200 {object} models.RetrieveSessionTicketResp
+// @Success 200 {object} models.RefreshSessionTicketResp
 // @Failure 403 :refresh_token is empty
+// @Failure 404 :refresh_token is not found in mysql:auth_ticket
 // @router /:refresh_token/refresh [get]
 func (t *TicketController) Refresh() {
 	uri := t.Ctx.Input.URI()
