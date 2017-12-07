@@ -29,7 +29,7 @@ func (this *LoginController) Post() {
   var req models.LoginReq
 	json.Unmarshal(this.Ctx.Input.RequestBody, &req)
 	beego.Trace(req)
-	if (req.Username == "" || req.Password == "") {
+	if (req.Id == "" || req.Pwd == "") {
 		var rs = &models.LoginResp{
 			Code: 403,
 			Msg: "Bad Request",
@@ -42,8 +42,8 @@ func (this *LoginController) Post() {
 
   // only for test, unit test can't md5(password) by js
   var args = &models.CreateTicketArgs{
-    Username: req.Username,
-    Md5Password: models.GetMd5String(req.Password),
+    Id: req.Id,
+    Md5pwd: models.GetMd5String(req.Pwd),
   }
   reply := &models.SessionTicket{}
   err = GlobalRpcClient.Call("Auth.CreateTicket", args, &reply)

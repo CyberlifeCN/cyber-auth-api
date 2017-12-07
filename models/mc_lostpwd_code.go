@@ -8,13 +8,13 @@ import (
 )
 
 
-func FindVerifyCode(uid string) *VerifyCode {
+func FindLostpwdVerifyCode(uid string) *LostpwdVerifyCode {
   // Connect to our memcache instance
   mc := memcache.New("127.0.0.1:11211")
 
   fmt.Println("uid:", uid)
   // Get a single value
-  val, err := mc.Get(uid)
+  val, err := mc.Get("lostpwd/" + uid)
   if err != nil {
     return nil
   }
@@ -23,19 +23,19 @@ func FindVerifyCode(uid string) *VerifyCode {
   fmt.Println("Key:", val.Key)
   fmt.Println("Value:", val.Value)
 
-  var code = &VerifyCode{}
+  var code = &LostpwdVerifyCode{}
   json.Unmarshal(val.Value, &code)
-  fmt.Println("VerifyCode:", code)
+  fmt.Println("LostpwdVerifyCode:", code)
 
 	return code
 }
 
 
-func AddVerifyCode(code VerifyCode) {
+func AddLostpwdVerifyCode(code LostpwdVerifyCode) {
   // Connect to our memcache instance
   mc := memcache.New("127.0.0.1:11211")
 
-  fmt.Println("VerifyCode:", code)
+  fmt.Println("LostpwdVerifyCode:", code)
   jsonBytes, err := json.Marshal(code)
   if err != nil {
     panic(err)
@@ -43,5 +43,5 @@ func AddVerifyCode(code VerifyCode) {
   fmt.Println("Bytes:", jsonBytes)
 
   // Set some values
-  mc.Set(&memcache.Item{Key: code.Id, Value: []byte(jsonBytes)})
+  mc.Set(&memcache.Item{Key: "lostpwd/"+code.Id, Value: []byte(jsonBytes)})
 }

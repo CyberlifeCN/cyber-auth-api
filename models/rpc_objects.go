@@ -1,8 +1,8 @@
 package models
 
 type CreateLoginArgs struct {
-  Username      string
-  Md5Password   string
+  Id      string
+  Md5pwd  string
   Code          string
 }
 
@@ -12,8 +12,8 @@ type CreateLoginReply struct {
 }
 
 type CreateTicketArgs struct {
-  Username      string
-  Md5Password   string
+  Id      string
+  Md5pwd   string
 }
 
 type RetrieveTicketArgs struct {
@@ -24,16 +24,35 @@ type RefreshTicketArgs struct {
   RefreshToken  string
 }
 
-type CreateCodeArgs struct {
+type CreateRegisterCodeArgs struct {
   Id            string
 }
 
-type CreateCodeReply struct {
+type CreateRegisterCodeReply struct {
   Code          string
   Status        int
 }
 
-type RetrieveCodeArgs struct {
+type CreateLostpwdCodeArgs struct {
   Id            string
-  Type          string
+}
+
+type CreateLostpwdCodeReply struct {
+  Code          string
+  Status        int
+}
+
+type LostpwdArgs struct {
+  Id      string
+  Md5pwd  string
+  Code          string
+}
+
+type LostpwdReply struct {
+  Id            string
+  Status        int
+}
+
+type RetrieveRegisterCodeArgs struct {
+  Id            string
 }

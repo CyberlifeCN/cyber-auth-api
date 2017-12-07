@@ -1,9 +1,15 @@
 package models
 
 
-type VerifyCode struct {
+type RegisterVerifyCode struct {
   Id            string    `json:"uid"`
-  // Type          string    `json:"type"`
+  Code          string    `json:"code"`
+  // AccountId     string    `json:"account_id"`
+  ExpiresAt     int64     `json:"expires_at"`
+}
+
+type LostpwdVerifyCode struct {
+  Id            string    `json:"uid"`
   Code          string    `json:"code"`
   // AccountId     string    `json:"account_id"`
   ExpiresAt     int64     `json:"expires_at"`
@@ -46,10 +52,20 @@ type VerifyCodeResp struct {
   Rs   	 	string 	          `json:"rs"`
 }
 
+type LostpwdVerifyCodeReq struct {
+  Id      string          `json:"uid"`
+}
+
+type LostpwdVerifyCodeResp struct {
+	Code   	int 					    `json:"err_code"`
+	Msg    	string 						`json:"err_msg"`
+  Rs   	 	string 	          `json:"rs"`
+}
+
 type RegisterReq struct {
-  Username   string         `json:"username"`
-  Password   string         `json:"password"`
-  Code       string         `json:"verify_code"`
+  Id         string         `json:"uid"`
+  Pwd        string         `json:"pwd"`
+  Code       string         `json:"code"`
 }
 
 type RegisterResp struct {
@@ -59,8 +75,8 @@ type RegisterResp struct {
 }
 
 type LoginReq struct {
-  Username   string         `json:"username"`
-  Password   string         `json:"password"`
+  Id      string         `json:"uid"`
+  Pwd     string         `json:"pwd"`
 }
 
 type LoginResp struct {
@@ -79,4 +95,16 @@ type RefreshSessionTicketResp struct {
 	Code   	int 					    `json:"err_code"`
 	Msg    	string 						`json:"err_msg"`
   Rs   	 	RefreshTicket 	  `json:"rs"`
+}
+
+type LostpwdReq struct {
+  Id         string         `json:"uid"`
+  Pwd        string         `json:"pwd"`
+  Code       string         `json:"code"`
+}
+
+type LostpwdResp struct {
+	Code   	int 					    `json:"err_code"`
+	Msg    	string 						`json:"err_msg"`
+  Rs   	 	string 	          `json:"rs"`
 }

@@ -30,9 +30,19 @@ func init() {
 				&controllers.TicketController{},
 			),
 		),
-		beego.NSNamespace("/code",
+		beego.NSNamespace("/register/code",
 			beego.NSInclude(
-				&controllers.CodeController{},
+				&controllers.RegisterCodeController{},
+			),
+		),
+		beego.NSNamespace("/lostpwd/code",
+			beego.NSInclude(
+				&controllers.LostpwdCodeController{},
+			),
+		),
+		beego.NSNamespace("/lostpwd",
+			beego.NSInclude(
+				&controllers.LostpwdController{},
 			),
 		),
 	)

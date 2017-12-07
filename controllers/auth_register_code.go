@@ -9,19 +9,19 @@ import (
 )
 
 
-// Operations about VerifyCode
-type CodeController struct {
+// Operations about register verify_code
+type RegisterCodeController struct {
 	beego.Controller
 }
 
 
 // @Title Code
-// @Description retrieve verify_code by uid(username,phone,email) though RPC
+// @Description retrieve register_verify_code by uid(username,phone,email) though RPC
 // @Param	body		body 	models.VerifyCodeReq	true		"body for retrieve content"
 // @Success 200 {object} models.VerifyCodeResp
 // @Failure 403 :uid or type is empty
 // @router / [post]
-func (this *CodeController) Post() {
+func (this *RegisterCodeController) Post() {
 	uri := this.Ctx.Input.URI()
   beego.Info(uri)
   beego.Info(this.Ctx.Input.RequestBody)
@@ -40,11 +40,11 @@ func (this *CodeController) Post() {
 		return
 	}
 
-  var args = &models.CreateCodeArgs{
+  var args = &models.CreateRegisterCodeArgs{
     Id: req.Id,
   }
-  reply := &models.CreateCodeReply{}
-  err = GlobalRpcClient.Call("Auth.CreateCode", args, &reply)
+  reply := &models.CreateRegisterCodeReply{}
+  err = GlobalRpcClient.Call("Auth.CreateRegisterCode", args, &reply)
   if err != nil {
     log.Fatal("CreateCode error :", err)
   }
