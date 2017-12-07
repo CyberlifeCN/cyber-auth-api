@@ -1,0 +1,5 @@
+p, guest, 0.0.0.0/0, /swagger/, GET
+p, user, 0.0.0.0/0, /swagger/, GET
+p, guest, 0.0.0.0/0, /api/auth/login/, POST
+p, user, 0.0.0.0/0, /api/auth/login/, POST
+p, user, 0.0.0.0/0, /api/auth/ticket/*, GET
