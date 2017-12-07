@@ -170,7 +170,7 @@ func (t *Auth) CreateRegisterCode(args *models.CreateRegisterCodeArgs, reply *mo
   login := models.FindAuthLogin(args.Id)
   fmt.Println("Auth.login: %d", login)
   if (login != nil) {
-    var rs = &models.CreateCodeReply{}
+    var rs = &models.CreateRegisterCodeReply{}
     rs.Status = 412
     *reply = *rs
     return nil
@@ -310,6 +310,29 @@ func (t *Auth) RetrieveRegisterCode(args *models.RetrieveRegisterCodeArgs, reply
     reply = nil
     return nil
   }
+}
+
+
+func (t *Auth) Logout(args *models.LogoutArgs, reply *models.LogoutReply) error {
+  fmt.Println("Auth.Logout: %d", args)
+
+  ticket := models.FindSessionTicket(args.AccessToken)
+  if ticket == nil {
+    code := &models.LogoutReply{}
+    code.Status = 404
+    *reply = *code
+    return nil
+  }
+
+  // TODO delete session_ticket by access_token from memcache
+  models.DeleteSessionTicket(ticket.Id)
+  // TODO delete session_ticket by refresh_token from mysql:auth_ticket
+  models.DeleteRefreshTicket(ticket.RefreshToken)
+
+  code := &models.LogoutReply{}
+  code.Status = 200
+  *reply = *code
+  return nil
 }
 
 

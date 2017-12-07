@@ -56,3 +56,11 @@ type LostpwdReply struct {
 type RetrieveRegisterCodeArgs struct {
   Id            string
 }
+
+type LogoutArgs struct {
+  AccessToken   string
+}
+
+type LogoutReply struct {
+  Status        int
+}

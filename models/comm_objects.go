@@ -108,3 +108,8 @@ type LostpwdResp struct {
 	Msg    	string 						`json:"err_msg"`
   Rs   	 	string 	          `json:"rs"`
 }
+
+type LogoutResp struct {
+	Code   	int 					    `json:"err_code"`
+	Msg    	string 						`json:"err_msg"`
+}

@@ -45,3 +45,14 @@ func AddSessionTicket(ticket SessionTicket) {
   // Set some values
   mc.Set(&memcache.Item{Key: ticket.Id, Value: []byte(jsonBytes)})
 }
+
+
+func DeleteSessionTicket(access_token string) {
+  // Connect to our memcache instance
+  mc := memcache.New("127.0.0.1:11211")
+
+  fmt.Println("access_token:", access_token)
+
+  // Delete by key
+  mc.Delete(access_token)
+}
