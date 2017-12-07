@@ -2,11 +2,11 @@ package models
 
 
 type AuthLogin struct {
-  Id          string    `bson:"_id,omitempty"`
-  Salt        string    `bson:"salt,omitempty"`
-  CreateTime  int       `bson:"create_time,omitempty"`
-  AccountId   string    `bson:"account_id,omitempty"`
-  HashPwd     string    `bson:"hash_pwd,omitempty"`
+  Id            string    `json:"uid"`
+  Salt          string    `json:"salt"`
+  HashPwd       string    `json:"hash_pwd"`
+  AccountId     string    `json:"account_id"`
+  Ctime         int64     `json:"ctime"`
 }
 
 type SessionTicket struct {
@@ -19,9 +19,28 @@ type SessionTicket struct {
   Scope         string    `bson:"scope"`
 }
 
+type RefreshTicket struct {
+  Id            string    `json:"refresh_token"`
+  AccessToken   string    `json:"access_token"`
+  AccountId     string    `json:"account_id"`
+  ExpiresAt     int64     `json:"expires_at"`
+  TokenType     string    `json:"token_type"`
+  Scope         string    `json:"scope"`
+}
+
+
+type RegisterReq struct {
+  Username   string         `json:"username"`
+  Password   string         `json:"password"`
+}
+
+type RegisterResp struct {
+	Code   	int 					    `json:"err_code"`
+	Msg    	string 						`json:"err_msg"`
+  Rs   	 	string 	          `json:"rs"`
+}
 
 type LoginReq struct {
-  // Id bson.ObjectId `bson:"_id,omitempty"`
   Username   string         `json:"username"`
   Password   string         `json:"password"`
 }
