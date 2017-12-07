@@ -4,8 +4,8 @@ import (
 	"cyber-auth-api/models"
 	// "encoding/json"
 	"github.com/astaxie/beego"
-  // "log"
-  // "fmt"
+  "log"
+  "fmt"
 )
 
 
@@ -29,14 +29,23 @@ func (t *TicketController) Get() {
 	access_token := t.GetString(":access_token")
   beego.Trace(access_token)
 
-	ticket := models.FindAccessToken(access_token)
-	if (ticket != nil) {
-		beego.Trace(ticket)
+	var args = &models.RetrieveTicketArgs{
+    AccessToken: access_token,
+  }
+  reply := &models.SessionTicket{}
+  err = GlobalRpcClient.Call("Auth.RetrieveTicket", args, &reply)
+  if err != nil {
+    log.Fatal("RetrieveTicket error :", err)
+  }
+  fmt.Println("RetrieveTicket:", args, reply)
+
+	if (reply != nil) {
+		beego.Trace(reply)
 
 		var rs = &models.RetrieveSessionTicketResp{
 			Code: 200,
 			Msg: "Success",
-			Rs: *ticket,
+			Rs: *reply,
 		}
 
 		t.Data["json"] = *rs

@@ -58,18 +58,17 @@ func (t *Auth) CreateTicket(args *models.CreateTicketArgs, reply *models.Session
       // create access_token for session_ticket
       var ticket = &models.SessionTicket{}
       ticket.AccountId = login.AccountId
-      ticket.AccessToken = models.GetUuidString()
       ticket.ExpiresAt = timestamp + 7200000 // 2hours
       ticket.RefreshToken = models.GetUuidString()
       ticket.TokenType = "Bearer"
       ticket.Scope = "all"
-      ticket.Id = ticket.AccessToken
-      models.AddAccessToken(*ticket)
+      ticket.Id = models.GetUuidString()
+      models.AddSessionTicket(*ticket)
 
       // create refresh_token for session_ticket
       var refresh_ticket = &models.RefreshTicket{}
       refresh_ticket.AccountId = login.AccountId
-      refresh_ticket.AccessToken = ticket.AccessToken
+      refresh_ticket.AccessToken = ticket.Id
       refresh_ticket.ExpiresAt = timestamp + 108000000 // 30days
       refresh_ticket.Id = ticket.RefreshToken
       refresh_ticket.TokenType = "Bearer"
@@ -89,14 +88,19 @@ func (t *Auth) CreateTicket(args *models.CreateTicketArgs, reply *models.Session
 func (t *Auth) RetrieveTicket(args *models.RetrieveTicketArgs, reply *models.SessionTicket) error {
   fmt.Println("Auth.RetrieveTicket: %d", args)
 
-  ticket := models.FindAccessToken(args.AccessToken)
+  ticket := models.FindSessionTicket(args.AccessToken)
   if ticket != nil {
-    *reply = *ticket
+    if (ticket.ExpiresAt < models.GetTimestamp()) {
+      reply = nil
+      return nil
+    } else {
+      *reply = *ticket
+      return nil
+    }
+  } else {
+    reply = nil
     return nil
   }
-
-  reply = nil
-  return nil
 }
 
 

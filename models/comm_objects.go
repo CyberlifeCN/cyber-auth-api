@@ -10,13 +10,12 @@ type AuthLogin struct {
 }
 
 type SessionTicket struct {
-  Id            string    `bson:"_id,omitempty"`
-  AccessToken   string    `bson:"access_token"`
-  AccountId     string    `bson:"account_id"`
-  RefreshToken  string    `bson:"refresh_token"`
-  ExpiresAt     int64     `bson:"expires_at,omitempty"`
-  TokenType     string    `bson:"token_type"`
-  Scope         string    `bson:"scope"`
+  Id            string    `json:"access_token"`
+  AccountId     string    `json:"account_id"`
+  RefreshToken  string    `json:"refresh_token"`
+  ExpiresAt     int64     `json:"expires_at"`
+  TokenType     string    `json:"token_type"`
+  Scope         string    `json:"scope"`
 }
 
 type RefreshTicket struct {
@@ -46,14 +45,14 @@ type LoginReq struct {
 }
 
 type LoginResp struct {
-	Code   	int 					     `json:"err_code"`
-	Msg    	string 						 `json:"err_msg"`
-  Rs   	 	SessionTicket 	   `json:"rs"`
+	Code   	int 					    `json:"err_code"`
+	Msg    	string 						`json:"err_msg"`
+  Rs   	 	SessionTicket 	  `json:"rs"`
 }
 
 
 type RetrieveSessionTicketResp struct {
-	Code   	int 					     `json:"err_code"`
-	Msg    	string 						 `json:"err_msg"`
-  Rs   	 	SessionTicket 	   `json:"rs"`
+	Code   	int 					    `json:"err_code"`
+	Msg    	string 						`json:"err_msg"`
+  Rs   	 	SessionTicket 	  `json:"rs"`
 }

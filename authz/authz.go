@@ -45,12 +45,14 @@ import (
 	"encoding/base64"
 	"strings"
 	"fmt"
+	"log"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"github.com/casbin/casbin"
 
 	"cyber-auth-api/models"
+	"cyber-auth-api/controllers"
 )
 
 // NewAuthorizer returns the authorizer.
@@ -88,12 +90,25 @@ func (a *BasicAuthorizer) GetGroupName(r *http.Request) string {
 		return "guest"
 	}
 
-	ticket := models.FindAccessToken(s[1])
-	if (ticket == nil) {
+	var args = &models.RetrieveTicketArgs{
+    AccessToken: s[1],
+  }
+  reply := &models.SessionTicket{}
+  err = controllers.GlobalRpcClient.Call("Auth.RetrieveTicket", args, &reply)
+  if err != nil {
+    log.Fatal("RetrieveTicket error :", err)
+  }
+  fmt.Println("RetrieveTicket:", args, reply)
+
+	if (reply == nil) {
 		return "guest"
 	} else {
-		// TODO user, member, ops, admin
-		return "user"
+		if (reply.Id == "") {
+			return "guest"
+		} else {
+			// TODO user, member, ops, admin
+			return "user"
+		}
 	}
 }
 
