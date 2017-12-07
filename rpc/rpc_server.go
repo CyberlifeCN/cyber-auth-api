@@ -19,14 +19,40 @@ func (t *Auth) CreateLogin(args *models.CreateLoginArgs, reply *models.CreateLog
   login := models.FindAuthLogin(args.Username)
   if login != nil {
     var rs = &models.CreateLoginReply{}
+    rs.Status = 409
     *reply = *rs
     return nil
   } else {
+    timestamp := models.GetTimestamp()
+
+    // check verify_code
+    code := models.FindVerifyCode(args.Username)
+    if (code == nil) {
+      var rs = &models.CreateLoginReply{}
+      rs.Status = 412 // 服务器未满足请求者在请求中设置的其中一个前提条件。
+      *reply = *rs
+      return nil
+    } else {
+      if (code.Code != args.Code) {
+        var rs = &models.CreateLoginReply{}
+        rs.Status = 412 // 服务器未满足请求者在请求中设置的其中一个前提条件。
+        *reply = *rs
+        return nil
+      }
+    }
+
+    if (code.ExpiresAt < timestamp) {
+      var rs = &models.CreateLoginReply{}
+      rs.Status = 408
+      *reply = *rs
+      return nil
+    }
+
     // create account_id for login
     var register = &models.AuthLogin{}
     register.Id = args.Username
     register.AccountId = models.GetUuidString()
-    register.Ctime = models.GetTimestamp()
+    register.Ctime = timestamp
     register.Salt = models.RandomString(10, "a0")
     md5_salt := models.GetMd5String(register.Salt)
     hash_pwd := models.GetMd5String(args.Md5Password + md5_salt)
@@ -34,6 +60,7 @@ func (t *Auth) CreateLogin(args *models.CreateLoginArgs, reply *models.CreateLog
 
     models.AddAuthLogin(*register)
     var rs = &models.CreateLoginReply{}
+    rs.Status = 200
     rs.Id = register.AccountId
     *reply = *rs
     return nil
@@ -128,6 +155,65 @@ func (t *Auth) RefreshTicket(args *models.RefreshTicketArgs, reply *models.Refre
       models.UpdateRefreshTicket(refresh_ticket.Id, refresh_ticket.AccessToken)
 
       *reply = *refresh_ticket
+      return nil
+    }
+  } else {
+    reply = nil
+    return nil
+  }
+}
+
+
+func (t *Auth) CreateCode(args *models.CreateCodeArgs, reply *models.CreateCodeReply) error {
+  fmt.Println("Auth.CreateCode: %d", args)
+
+  timestamp := models.GetTimestamp()
+  code := models.FindVerifyCode(args.Id)
+  if (code != nil) {
+    if (code.ExpiresAt > timestamp) {
+      var rs = &models.CreateCodeReply{}
+      rs.Code = code.Code
+      rs.Status = 409
+      *reply = *rs
+      return nil
+    }
+  }
+
+  // login := models.FindAuthLogin(args.Id)
+  // fmt.Println("Auth.login: %d", login)
+  // if (login == nil || login.Id == "") {
+  //   var rs = &models.CreateCodeReply{}
+  //   rs.Status = 404
+  //   *reply = *rs
+  //   return nil
+  // }
+
+  // create verify_code for register/lost-pwd/...
+  var verify_code = &models.VerifyCode{}
+  verify_code.Id = args.Id
+  // verify_code.AccountId = login.AccountId
+  verify_code.ExpiresAt = timestamp + 300000 // 5mins
+  verify_code.Code = models.RandomString(6, "a0")
+
+  models.AddVerifyCode(*verify_code)
+  var rs = &models.CreateCodeReply{}
+  rs.Code = verify_code.Code
+  rs.Status = 200
+  *reply = *rs
+  return nil
+}
+
+
+func (t *Auth) RetrieveCode(args *models.RetrieveCodeArgs, reply *models.VerifyCode) error {
+  fmt.Println("Auth.RetrieveCode: %d", args)
+
+  code := models.FindVerifyCode(args.Id)
+  if code != nil {
+    if (code.ExpiresAt < models.GetTimestamp()) {
+      reply = nil
+      return nil
+    } else {
+      *reply = *code
       return nil
     }
   } else {

@@ -7,3 +7,5 @@ p, user, 0.0.0.0/0, /api/auth/login/, POST
 p, user, 0.0.0.0/0, /api/auth/ticket/*, GET
 p, guest, 0.0.0.0/0, /api/auth/ticket/*/refresh, GET
 p, user, 0.0.0.0/0, /api/auth/ticket/*/refresh, GET
+p, guest, 0.0.0.0/0, /api/auth/code/, POST
+p, user, 0.0.0.0/0, /api/auth/code/, POST

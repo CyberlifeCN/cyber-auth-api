@@ -30,6 +30,11 @@ func init() {
 				&controllers.TicketController{},
 			),
 		),
+		beego.NSNamespace("/code",
+			beego.NSInclude(
+				&controllers.CodeController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }

@@ -1,6 +1,14 @@
 package models
 
 
+type VerifyCode struct {
+  Id            string    `json:"uid"`
+  // Type          string    `json:"type"`
+  Code          string    `json:"code"`
+  // AccountId     string    `json:"account_id"`
+  ExpiresAt     int64     `json:"expires_at"`
+}
+
 type AuthLogin struct {
   Id            string    `json:"uid"`
   Salt          string    `json:"salt"`
@@ -28,9 +36,20 @@ type RefreshTicket struct {
 }
 
 
+type VerifyCodeReq struct {
+  Id      string          `json:"uid"`
+}
+
+type VerifyCodeResp struct {
+	Code   	int 					    `json:"err_code"`
+	Msg    	string 						`json:"err_msg"`
+  Rs   	 	string 	          `json:"rs"`
+}
+
 type RegisterReq struct {
   Username   string         `json:"username"`
   Password   string         `json:"password"`
+  Code       string         `json:"verify_code"`
 }
 
 type RegisterResp struct {

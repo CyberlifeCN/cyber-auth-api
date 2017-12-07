@@ -16,7 +16,7 @@ type RegisterController struct {
 
 
 // @Title Register
-// @Description register by username & password though RPC
+// @Description register by username,password,verify_code though RPC
 // @Param	body		body 	models.RegisterReq	true		"body for register content"
 // @Success 200 {object} models.RegisterResp
 // @Failure 403 :username or password is empty
@@ -29,7 +29,7 @@ func (this *RegisterController) Post() {
   var req models.RegisterReq
 	json.Unmarshal(this.Ctx.Input.RequestBody, &req)
 	beego.Trace(req)
-	if (req.Username == "" || req.Password == "") {
+	if (req.Username == "" || req.Password == "" || req.Code == "") {
 		var rs = &models.RegisterResp{
 			Code: 403,
 			Msg: "Bad Request",
@@ -44,6 +44,7 @@ func (this *RegisterController) Post() {
   var args = &models.CreateLoginArgs{
     Username: req.Username,
     Md5Password: models.GetMd5String(req.Password),
+		Code: req.Code,
   }
   reply := &models.CreateLoginReply{}
   err = GlobalRpcClient.Call("Auth.CreateLogin", args, &reply)
@@ -52,7 +53,7 @@ func (this *RegisterController) Post() {
   }
   fmt.Println("CreateLogin:", args, reply)
 
-	if (reply == nil || reply.Id == "") {
+	if (reply == nil) {
     var rs = &models.RegisterResp{
 			Code: 409,
 			Msg: "Conflict",
@@ -64,10 +65,17 @@ func (this *RegisterController) Post() {
 		beego.Trace(reply)
 
 		var rs = &models.RegisterResp{
-			Code: 200,
+			Code: reply.Status,
 			Msg: "Success",
 			Rs: reply.Id,
 		}
+		if (rs.Code == 408) {
+      rs.Msg = "Request Timeout"
+    } else if (rs.Code == 409) {
+      rs.Msg = "Conflict"
+		} else if (rs.Code == 412) {
+      rs.Msg = "Precondition Failed"
+    }
 
 		this.Data["json"] = *rs
 		this.ServeJSON()
