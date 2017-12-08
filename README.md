@@ -38,6 +38,7 @@
 ### 启动
     $ cd rpc
     $ go run rpc_server.go
+    $ cd ..
     $ bee run -gendoc=true -downdoc=true
 
 ### Demo
