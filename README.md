@@ -1,7 +1,7 @@
 [![image](http://b2oks-cover.b0.upaiyun.com/default/cyberlife-logo.jpg)](http://cyber-life.cn)
 # cyber-auth-api
 
-任何一个信息软件系统，用户认证都是最基础的模块。创建一个项目时，首先总要完成这一部分。把多年项目中的实践归纳、整理出来这个最精简的模块，供大家参考，HTTP Restful API。它包含8个API：
+任何一个信息系统软件，用户认证都是最基础的模块，创建一个新项目时，首先就要完成这一部分。把多年项目中的实践归纳、整理出来这个最精简的模块，供大家参考，HTTP Restful API。它包含8个API：
 * 登录
 * 登出
 * 获取注册验证码
@@ -10,6 +10,9 @@
 * 忘记密码
 * 通过存储在cookie中access_token重新获取session_ticket
 * 通过存储在cookie中refresh_token重新获取session_ticket
+
+### Demo
+[API文档](http://auth.domicake.com/swagger/ "可以直接作为单元测试工具使用")
 
 ### 安装golang
     # yum install go
@@ -40,9 +43,6 @@
     $ go run rpc_server.go &
     $ cd ..
     $ bee run -gendoc=true -downdoc=true &
-
-### Demo
-[API文档](http://auth.domicake.com/swagger/ "可以直接作为单元测试工具使用")
 
 ### Linux下通过端口查看进程
     # netstat -anp|grep 8086
