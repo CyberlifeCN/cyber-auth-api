@@ -32,8 +32,8 @@
     $ go get github.com/casbin/casbin
 
 ### 创建工程
-    $ bee api cyber-auth-api
-    $ cd cyber-auth-api/
+    $ go get github.com/CyberlifeCN/cyber-auth-api
+    $ cd github.com/CyberlifeCN/cyber-auth-api
 
 ### 启动
     $ cd rpc
