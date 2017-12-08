@@ -29,5 +29,8 @@
     $ go run rpc_server.go
     $ bee run -gendoc=true -downdoc=true
 
+## Demo
+    http://auth.domicake.com/swagger/
+
 ## Linux下通过端口查看进程
     # netstat -anp|grep 8086
