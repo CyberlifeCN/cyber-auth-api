@@ -37,9 +37,9 @@
 
 ### 启动
     $ cd rpc
-    $ go run rpc_server.go
+    $ go run rpc_server.go &
     $ cd ..
-    $ bee run -gendoc=true -downdoc=true
+    $ bee run -gendoc=true -downdoc=true &
 
 ### Demo
 [API文档](http://auth.domicake.com/swagger/ "可以直接作为单元测试工具使用")
