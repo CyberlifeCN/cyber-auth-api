@@ -1,4 +1,4 @@
-![image](http://b2oks-cover.b0.upaiyun.com/default/cyberlife-logo.jpg "cyber-life") 
+[![image](http://b2oks-cover.b0.upaiyun.com/default/cyberlife-logo.jpg)](http://cyber-life.cn)
 # cyber-auth-api
 
 ### 安装golang
