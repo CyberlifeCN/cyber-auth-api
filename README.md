@@ -30,7 +30,7 @@
     $ bee run -gendoc=true -downdoc=true
 
 ### API文档
-    [Demo]: http://auth.domicake.com/swagger/ "可以直接作为单元测试工具使用"
+  [Demo]:http://auth.domicake.com/swagger/ "可以直接作为单元测试工具使用"
 
 ### Linux下通过端口查看进程
     # netstat -anp|grep 8086
