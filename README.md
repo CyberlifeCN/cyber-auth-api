@@ -46,3 +46,4 @@
 
 ### Linux下通过端口查看进程
     # netstat -anp|grep 8086
+    # netstat -anp|grep 12345
