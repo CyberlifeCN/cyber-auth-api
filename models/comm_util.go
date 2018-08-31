@@ -20,7 +20,10 @@ func GetMd5String(s string) string {
 
 //生成32位uuid字串
 func GetUuidString() string {
-  uid := strings.Replace(uuid.NewV4().String(), "-", "", -1)
+//  uid := strings.Replace(uuid.NewV4().String(), "-", "", -1)
+  suid,_ := uuid.NewV4()
+  sha1 := suid.String()
+  uid := strings.Replace(sha1, "-", "", -1)    
   return uid
 }
 
